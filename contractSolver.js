@@ -2,7 +2,15 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
+  testContracts(ns, "Compression I: RLE Compression", crle, 100)
 
+  // let contract = "contract-493490.cct"
+  // let data = ns.codingcontract.getData(contract, "home")
+  // let answer = crle(data)
+  // ns.tprint(data)
+  // ns.tprint(answer)
+  // let result = ns.codingcontract.attempt(answer, contract, "home")
+  // ns.tprint("Result of attempt on " + contract + ":\t" + result)
 }
 
 // Helper function. Used for testing scripts
@@ -29,6 +37,49 @@ function deleteAllContracts(ns) {
   for (let file of files) {
     ns.rm(file, "home")
   }
+}
+
+// Compression I: RLE Compression
+// Inputs:
+//    - [String] String to be encoded using RLE
+// Outputs:
+//    - [String] Encoded string using RLE
+function crle(data) {
+  const inputString = data
+
+  let returnString = ""
+  let currChar = inputString.charAt(0)
+  let numChars = 0
+  for (let i = 0; i < inputString.length; ++i) {
+    if (inputString.charAt(i) === currChar) {
+      numChars += 1
+      if (numChars >= 9) {
+        let addString = numChars + currChar
+        returnString = returnString + addString
+        currChar = ""
+        numChars = 0
+      }
+    }
+
+    else if (numChars == 0) {
+      currChar = inputString.charAt(i)
+      numChars = 1
+    }
+
+    else {
+      let addString = numChars + currChar
+      returnString = returnString + addString
+      currChar = inputString.charAt(i)
+      numChars = 1
+    }
+  }
+
+  if (numChars > 0) {
+    let addString = numChars + currChar
+    returnString = returnString + addString
+  }
+  
+  return returnString
 }
 
 // Encryption I: Caesar Cipher
